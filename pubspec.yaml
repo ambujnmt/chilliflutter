@@ -17,7 +17,7 @@ dependencies:
   shared_preferences: ^2.5.3
   pinput: ^5.0.2
   smart_auth: ^2.0.0
-  simple_floating_bottom_nav_bar: ^0.0.3
+#  simple_floating_bottom_nav_bar: ^0.0.3
 
 dev_dependencies:
   flutter_test:
@@ -42,3 +42,11 @@ flutter:
     - family: ArimoRegular
       fonts:
         - asset: assets/fonts/Arimo-Regular.ttf
+    - family: Avenir LT Pro
+      fonts:
+        - asset: assets/fonts/AvenirLTProLight.otf
+          weight: 300
+        - asset: assets/fonts/AvenirLTProMedium.otf
+          weight: 500
+        - asset: assets/fonts/AvenirLTProBlack.otf
+          weight: 800

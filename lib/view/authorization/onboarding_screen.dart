@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../utils/route_name.dart';
-import '../../utils/storage.dart';
-import '../constant/colors.dart';
-import '../constant/onboard_view.dart';
+import '../../../utils/route_name.dart';
+import '../../../utils/storage.dart';
+import '../../constant/colors.dart';
+import '../../constant/onboard_view.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -14,6 +14,8 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen>
     with TickerProviderStateMixin {
+
+  dynamic size;
   late AnimationController _animationController;
   late PageController _controller;
   int _currentPage = 0;
@@ -52,9 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double width = SizeConfig.screenW!;
-    double height = SizeConfig.screenH!;
+    size = MediaQuery.of(context).size;
 
     final titleAnimation =
     Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(
@@ -130,7 +130,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           ),
                         ),
                         const SizedBox(height: 20),
-                        SizedBox(height: (height >= 840) ? 60 : 30),
+                        SizedBox(height: (size.height >= 840) ? 60 : 30),
                       ],
                     ),
                   );
@@ -160,18 +160,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               context, RoutesName.startedScreen);
                         },
                         style: TextButton.styleFrom(
-                          backgroundColor: AppColors.buttonColor,
+                          backgroundColor: AppColors.primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           padding: EdgeInsets.symmetric(
-                            horizontal: width * 0.2,
+                            horizontal: size.width * 0.2,
                             vertical: 12,
                           ),
                         ),
                         child: SlideTransition(
                           position: textAnimation,
-                          child: Text(
+                          child: const Text(
                             'Started',
                             style: TextStyle(
                               color: Colors.white,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chilli/constant/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,16 +7,20 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:smart_auth/smart_auth.dart';
-import '../utils/custom_text.dart';
+import '../../utils/custom_text.dart';
 
-class OtpView extends StatefulWidget {
-  const OtpView({super.key});
+class RegOtp extends StatefulWidget {
+  const RegOtp({super.key});
 
   @override
-  State<OtpView> createState() => _OtpViewState();
+  State<RegOtp> createState() => _RegOtpState();
 }
 
-class _OtpViewState extends State<OtpView> {
+class _RegOtpState extends State<RegOtp> {
+
+  late Timer timer;
+  int start = 60;
+  dynamic size;
   final customText = CustomText();
   late final SmsRetriever smsRetriever;
   late final TextEditingController pinController;
@@ -29,6 +35,7 @@ class _OtpViewState extends State<OtpView> {
     }
     pinController = TextEditingController();
     focusNode = FocusNode();
+    startTimer();
   }
 
   @override
@@ -39,11 +46,31 @@ class _OtpViewState extends State<OtpView> {
     smsRetriever.dispose();
     pinController.dispose();
     focusNode.dispose();
+    timer.cancel();
     super.dispose();
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (start == 1) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            start--;
+          });
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     const focusedBorderColor = Color.fromRGBO(23, 171, 144, 1);
     const fillColor = Color.fromRGBO(243, 246, 249, 0);
     const borderColor = Color.fromRGBO(23, 171, 144, 0.4);
@@ -62,12 +89,12 @@ class _OtpViewState extends State<OtpView> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(top: 40),
+            // margin: const EdgeInsets.only(top: 10),
             padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
             decoration: const BoxDecoration(
               color: Colors.white,
@@ -87,35 +114,36 @@ class _OtpViewState extends State<OtpView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 20,
                 ),
-                customText.kbText('Verification Code', 26, FontWeight.w700,
+                customText.kText('Verification Code', 26, FontWeight.w700,
                     Colors.black, TextAlign.start),
                 const SizedBox(height: 8),
-                customText.kmText(
-                    'We have send OTP code Verification to your\nmobile number.',
-                    14,
-                    FontWeight.w400,
-                    Colors.black,
-                    TextAlign.start),
-                const SizedBox(
-                  height: 5,
-                ),
-                Align(
-                    alignment: Alignment.center,
-                    child: Center(
-                      child: Row(
-                        children: [
-                          customText.kbText('Matrimonial@gmail.com', 14,
-                              FontWeight.w400, Colors.black, TextAlign.center),
-                          Image.asset(
-                            'assets/image/pen.png',
-                            width: 20,
-                            height: 20,
-                          )
-                        ],
-                      ),
-                    )),
+                customText.kText(
+                  'We have send OTP code Verification to your mobile number.',
+                  18,
+                  FontWeight.w400,
+                  Colors.black,
+                  TextAlign.start),
+                // const SizedBox(
+                //   height: 5,
+                // ),
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: Center(
+                //     child: Row(
+                //       children: [
+                //         customText.kbText('Matrimonial@gmail.com', 14,
+                //             FontWeight.w400, Colors.black, TextAlign.center),
+                //         Image.asset(
+                //           'assets/image/pen.png',
+                //           width: 20,
+                //           height: 20,
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 50,
                 ),
@@ -170,62 +198,118 @@ class _OtpViewState extends State<OtpView> {
 
                 Align(
                   alignment: Alignment.center,
-                  child: customText.krTextStyle(
-                      'you can resend code request in 55 s',
-                      14,
-                      FontWeight.w400,
-                      Colors.black,
-                      TextAlign.center),
+                  child: RichText(
+                    text: TextSpan(
+                      text: "You can resend code request in ",
+                      style: customText.kTextStyle(16, FontWeight.w400, Colors.black, TextAlign.center),
+                      children: [
+                        TextSpan(
+                          text: "$start",
+                          style: customText.kTextStyle(18, FontWeight.w400, Colors.blue, TextAlign.center),
+                        ),
+
+                        TextSpan(
+                          text: " s",
+                          style: customText.kTextStyle(16, FontWeight.w400, Colors.black, TextAlign.center),
+                        )
+
+                      ]
+                    )
+                  ),
                 ),
+
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: customText.kText(
+                //     'you can resend code request in 55 s',
+                //     16,
+                //     FontWeight.w400,
+                //     Colors.black,
+                //     TextAlign.center),
+                // ),
+
                 const SizedBox(
                   height: 40,
                 ),
 
                 /// Verify Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      onPressed:
-                      () {
-                        if (pinController.text.isNotEmpty) {
-                          Get.snackbar(
-                              'Success', 'OTP Entered: ${pinController.text}',
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white);
-                          // TODO: Navigate to next screen
-                        } else {
-                          Get.snackbar('Error', 'Please enter OTP',
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white);
-                        }
-                      };
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Ink(
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: ElevatedButton(
+                //     onPressed:
+                //     () {
+                //       if (pinController.text.isNotEmpty) {
+                //         Get.snackbar(
+                //             'Success', 'OTP Entered: ${pinController.text}',
+                //             backgroundColor: Colors.green,
+                //             colorText: Colors.white);
+                //       } else {
+                //         Get.snackbar('Error', 'Please enter OTP',
+                //             backgroundColor: Colors.red,
+                //             colorText: Colors.white);
+                //       }
+                //     },
+                //     style: ElevatedButton.styleFrom(
+                //       padding: EdgeInsets.zero,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //     ),
+                //     child: Ink(
+                //       decoration: BoxDecoration(
+                //         color: AppColors.primaryColor,
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       child: Container(
+                //         height: 50,
+                //         alignment: Alignment.center,
+                //         child: customText.kText(
+                //           'Submit',
+                //           18,
+                //           FontWeight.w700,
+                //           Colors.white,
+                //           TextAlign.center,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
+                GestureDetector(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 50,
+                      width: size.width * 0.8,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(10),
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(size.width * 0.03)
                       ),
-                      child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        child: customText.kbText(
+                      child: Center(
+                        child: customText.kText(
                           'Submit',
-                          18,
-                          FontWeight.w700,
+                          25,
+                          FontWeight.w500,
                           Colors.white,
                           TextAlign.center,
                         ),
                       ),
                     ),
                   ),
+                  onTap: () {
+                    if (pinController.text.isNotEmpty) {
+                      Get.snackbar(
+                          'Success', 'OTP Entered: ${pinController.text}',
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white);
+                    } else {
+                      Get.snackbar('Error', 'Please enter OTP',
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white);
+                    }
+                  },
                 ),
+
               ],
             ),
           ),

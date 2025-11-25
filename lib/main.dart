@@ -16,6 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0.0,
+        )
       ),
       initialRoute: RoutesName.splashScreen,
       onGenerateRoute: Routes.generateRoute,

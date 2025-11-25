@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:chilli/view/onboarding_screen.dart';
+import 'package:chilli/view/authorization/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,6 +10,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  
+  dynamic size;
 
   @override
   void initState() {
@@ -23,18 +25,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
+    size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Scaffold(
-          body: Column(
-            children: [
-              Image.asset('assets/image/splash.png',
-                fit: BoxFit.contain,
-                filterQuality: FilterQuality.high,)
-            ],
-          ),
-        )
+        body: SizedBox(
+          height: size.height,
+          width: size.width,
+          child: Image.asset('assets/image/splash.png',
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,),
+        ),
     );
   }
 }

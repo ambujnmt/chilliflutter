@@ -2,46 +2,47 @@ import 'package:chilli/constant/colors.dart';
 import 'package:chilli/utils/custom_text.dart';
 import 'package:flutter/material.dart';
 
-class NewPasswordScreen extends StatefulWidget {
-  const NewPasswordScreen({super.key});
+class NewPassword extends StatefulWidget {
+  const NewPassword({super.key});
 
   @override
-  State<NewPasswordScreen> createState() => _NewPasswordScreenState();
+  State<NewPassword> createState() => _NewPasswordState();
 }
 
-class _NewPasswordScreenState extends State<NewPasswordScreen> {
+class _NewPasswordState extends State<NewPassword> {
+
+  dynamic size;
   final customText = CustomText();
-
-
-
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child:  Column(
           children: [
 
+            const SizedBox(height: 10,),
+
             Image.asset('assets/image/password.png',
               width: 280,
-              height: 280,
+              height: 250,
             ),
-
-
-            const SizedBox(height: 10,),
-            customText.kmText('Create New Password', 30, FontWeight.w700, AppColors.primaryColor, TextAlign.start),
-
+            customText.kText('Create New Password', 30, FontWeight.w700, AppColors.primaryColor, TextAlign.start),
 
             const SizedBox(height: 10,),
 
+            customText.kText('Your new password must be different from previous password.', 18, FontWeight.w500, Colors.black, TextAlign.center),
 
-            customText.krTextStyle('Your new password must be different\nfrom previous password.', 18, FontWeight.w500, Colors.black, TextAlign.center),
+            const SizedBox(height: 10,),
+
             Container(
                 width: double.infinity,
                 height: 50,
                 margin: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 20),
+                    horizontal: 20, vertical: 10),
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15, vertical: 5),
                 decoration: BoxDecoration(
@@ -70,11 +71,12 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     Icon(Icons.visibility_off,color: Colors.grey.shade600,),
                   ],
                 )),
+
             Container(
                 width: double.infinity,
                 height: 50,
                 margin: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 20),
+                    horizontal: 20, vertical: 10),
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15, vertical: 5),
                 decoration: BoxDecoration(
@@ -103,6 +105,34 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     Icon(Icons.visibility_off,color: Colors.grey.shade600,),
                   ],
                 )),
+
+            const SizedBox(height: 40,),
+
+            GestureDetector(
+              child: Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 50,
+                  width: size.width * 0.8,
+                  decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(size.width * 0.03)
+                  ),
+                  child: Center(
+                    child: customText.kText(
+                      'Submit',
+                      25,
+                      FontWeight.w500,
+                      Colors.white,
+                      TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                // Get.to(const NewPassword());
+              },
+            ),
           ],
         ),
       )
